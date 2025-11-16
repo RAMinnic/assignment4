@@ -1,0 +1,13 @@
+# Pull fedora image
+FROM fedora:latest
+RUN dnf upgrade -y
+    && dnf clean all
+# Install httpd
+RUN dnf install -y httpd tuxpaint vim
+    && dnf clean all
+# Copy myinfo.html to the appropriate location
+COPY myinfo.html /var/www/html/myinfo.html
+# Expose port 80
+EXPOSE 80
+# Start httpd service
+httpd -D FOREGROUND
