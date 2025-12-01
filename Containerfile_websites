@@ -1,0 +1,30 @@
+# Pull fedora image
+FROM fedora:latest AS base
+
+# Initial Installs
+RUN dnf upgrade -y
+    && dnf clean all \
+    && dnf install -y httpd \
+    && dnf clean all
+
+# Copy myinfo.html to the appropriate location
+COPY /data /var/www/html/data
+
+# Expose port 80
+EXPOSE 80
+
+# Set the default command to run httpd in the foreground
+ENTRYPOINT ["/usr/sbin/httpd", "-DFOREGROUND"]
+
+
+
+# First Stage
+FROM base AS website1
+LABEL website='1'
+COPY website1.html /var/www/html/
+
+
+# Second Stage
+FROM base AS website2
+LABEL website='2'
+COPY website2.html /var/www/html/
